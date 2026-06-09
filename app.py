@@ -67,11 +67,28 @@ if uploaded_files:
             height=300
         )
 
-if st.button("Clear Notes"):
-    st.session_state.notes = ""
-    st.rerun()
+with st.sidebar:
+    st.header("Tools")        
 
+    if st.button("Clear Notes"):
+     st.session_state.notes = ""
+     st.rerun()
 
+    if st.button("Clear Chat History"):
+     st.session_state.chat_history = []
+     st.rerun()
+
+    st.markdown("---")
+    st.header("Statistics")
+
+    st.metric(
+        "Questions Asked",len(st.session_state.chat_history)
+    ) 
+
+    pdf_count = len(uploaded_files) if uploaded_files else 0
+    st.metric(
+        "PDFs Uploaded",pdf_count
+    )
 
 col1, col2 = st.columns([5,1])
 
@@ -118,8 +135,8 @@ if submit and question:
 
         st.success("Answer generated successfully!")
 
-    except Exception:
-        st.error("API Error")
+    except Exception as e:
+        st.error(f"Error:{e}")
 
 
 
@@ -134,9 +151,13 @@ for chat in reversed(st.session_state.chat_history):
 st.markdown("---")
 st.subheader("Study Tools")
 
-col1, col2, col3 = st.columns(3)
+tab1, tab2, tab3  = st.tabs([
+    "MCQs",
+    "Important Questions",
+    "Summary" 
+])
 
-with col1:
+with tab1:
     if st.button("Generate MCQs"):
         try:
             with st.spinner("Generating MCQs..."):
@@ -145,8 +166,8 @@ with col1:
                 )
                 st.session_state.mcq = mcq_response.text
                 st.write(st.session_state.mcq)
-        except Exception:
-            st.error("API Error")
+        except Exception as e:
+             st.error(f"Error:{e}")
 
     if "mcq" in st.session_state:
         st.download_button(
@@ -155,7 +176,7 @@ with col1:
             file_name="MCQ.txt"
         )        
 
-with col2:
+with tab2:
     if st.button("Important Questions"):
         try:
             with st.spinner("Generating Questions..."):
@@ -167,8 +188,8 @@ with col2:
 
             st.write(st.session_state.questions)
             
-        except Exception:
-            st.error("API Error")
+        except Exception as e:
+             st.error(f"Error:{e}")
 
     if "questions" in st.session_state:
         st.download_button(
@@ -177,7 +198,7 @@ with col2:
             file_name="IMP question.txt"
         )        
 
-with col3:
+with tab3:
     if st.button("Summary"):
         try:
             with st.spinner("Generating Summary..."):
@@ -190,8 +211,8 @@ with col3:
 
             st.write(st.session_state.summary)
 
-        except Exception:
-            st.error("API Error")
+        except Exception as e:
+             st.error(f"Error:{e}")
 
 if not st.session_state.get("notes"):
     st.warning("please upload PDF notes first.")

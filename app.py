@@ -25,7 +25,10 @@ if "questions" not in st.session_state:
     st.session_state.questions = "" 
         
 if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []        
+    st.session_state.chat_history = [] 
+
+if "pdf_texts" not in st.session_state:
+    st.session_state.pdf_texts = {}          
 
 st.set_page_config(
     page_title="Student Notes Chatbot",
@@ -42,30 +45,38 @@ uploaded_files = st.file_uploader(
 
 if uploaded_files:
 
-    text = ""
+   st.session_state.pdf_texts = {}
 
-    for uploaded_file in uploaded_files:
+for uploaded_file in uploaded_files:
 
-        st.write(uploaded_file.name)
+    st.write(uploaded_file.name)
 
-        doc = fitz.open(
-            stream=uploaded_file.read(),
-            filetype="pdf"
-        )
+    pdf_text = ""
 
-        for page in doc:
-            text += page.get_text() + "\n"
+    doc = fitz.open(
+        stream=uploaded_file.read(),
+        filetype="pdf"
+    )
 
-    text = text[:10000]
+    for page in doc:
+        pdf_text += page.get_text() + "\n"
 
-    st.session_state.notes = text
+    st.session_state.pdf_texts[
+        uploaded_file.name
+    ] = pdf_text[:50000]
 
-    with st.expander("View Extracted Notes"):
-        st.text_area(
-            "PDF Content",
-            text,
-            height=300
-        )
+combined_text = ""
+
+for pdf_name in st.session_state.pdf_texts:
+    combined_text += (
+        st.session_state.pdf_texts[pdf_name]
+        + "\n\n"
+    )
+
+st.session_state.notes = combined_text[:50000]   
+
+
+
 
 with st.sidebar:
     st.header("Tools")        
@@ -109,8 +120,9 @@ if submit and question:
 
     use the notes below to answer.
 
+    
     Notes:
-    {text}
+    {st.session_state.notes[:50000]}
 
     Question:
     {question}
@@ -126,7 +138,7 @@ if submit and question:
               "question": question , "answer": answer
               })  
 
-        st.session_state.char_history = st.session_state.chat_history[-10:]           
+        st.session_state.chat_history = st.session_state.chat_history[-10:]           
 
         st.subheader("Answer")
         st.write(response.text)

@@ -57,7 +57,12 @@ if "pdf_texts" not in st.session_state:
 
 if "exam_paper" not in st.session_state:
     st.session_state.exam_paper = ""
-    
+
+if "mid_exam_paper" not in st.session_state:
+    st.session_state.mid_exam_paper = ""
+
+if "final_exam_paper" not in st.session_state:
+    st.session_state.final_exam_paper = ""     
 
 st.set_page_config(
     page_title="Student Notes Chatbot",
@@ -314,86 +319,168 @@ if not st.session_state.get("notes"):
     st.stop()  
 
 with tab4:
-    if st.button("Generate Exam Paper"):
+
+    st.subheader("Generate Exam Paper")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        mid_sem = st.button("Mid Semester Paper")
+
+    with col2:
+        end_sem = st.button("End Semester Paper")
+
+    
+    if mid_sem:
+
         try:
-            with st.spinner("Generating Exam Paper..."):
+
+            with st.spinner("Generating Mid Semester Exam Paper..."):
 
                 exam_response = model.generate_content(
                     f"""
-                     Generate a university-style examination paper.
-                    You are an expert university paper setter.
+                    Generate a university-style examination paper.
+
+                    You are an expert diploma engineering paper setter.
 
                     Analyze:
+                    1. Syllabus weightage
+                    2. Chapter wise Notes
+                    3. Important Questions
+                    4. Question Pattern
 
-                        1. Syllabus weightage.
-                        2. chapter wise Notes
-                        3. important questions
-                        4. question pattern
-
-                       Generate a realistic predicted examination paper.
-
-                        Rules:
-
-                        - Follow syllabus weightage.
-                        - Follow university marks distribution.
-                        - Follow OR structure.
-                        - Focus on repeated topics.
-                        - Focus on high-weightage units.
-                        - Avoid random questions.
-                        - Cover entire syllabus.
-                        - Total Marks: mid semester 60 marks or final end semester 100 marks 
-                        - Include 5 marks and 10 marks questions
-                        - Follow diploma engineering exam pattern
-                        - Cover all important topics
-                        - Create realistic exam questions
-
-
+                    Rules:
+                    - Total Marks: 60
+                    - Cover only first 75% syllabus
+                    - Follow diploma engineering exam pattern
+                    - Follow OR structure
+                    - Include 5 marks and 10 marks questions
+                    - Focus on repeated questions
+                    - Focus on high-weightage chapters
+                    - Create realistic examination paper
 
                     Pattern:
+
                     Q1.
-                       (a),(b) Attempt compulsory two (5 marks each)
-                       (c) Attempt compulsory one (10 marks each)
+                    (a),(b) Attempt compulsory two (5 marks each)
+                    (c) Attempt compulsory one (10 marks)
 
                     Q2.
-                        (a),(b) Attempt compulsory two (5 marks each)
-                         (c) Attempt Any one of two (10 marks each)
+                    (a),(b) Attempt compulsory two (5 marks each)
+                    (c) Attempt Any One of Two (10 marks)
 
                     Q3.
-                        (a),(b),(c) Attempt Any Three ((a),(b) 5 marks each and (c) 10 marks)
-                        or (a),(b),(c) Attempt Any Three ((a),(b) 5 marks each and (c) 10 marks)
-
-                    Q4. 
-                        (a),(b),(c) Attempt Any Three ((a),(b) 5 marks each and (c) 10 marks)
-                        or (a),(b),(c) Attempt Any Three ((a),(b) 5 marks each and (c) 10 marks)
-                        
-                     Q5.
-                         
-                        (a),(b),(c) Attempt Any Three ((a),(b) 5 marks each and (c) 10 marks)
-                        or (a),(b),(c) Attempt Any Three ((a),(b) 5 marks each and (c) 10 marks)
-      
+                    (a),(b),(c) Attempt Any Three
+                    ((a),(b) = 5 marks each and (c) = 10 marks)
 
                     Notes:
                     {st.session_state.notes[:50000]}
 
                     SYLLABUS:
-                    {syllabus_text[:15000]}
+                    {syllabus_text[:10000]}
                     """
                 )
 
-                st.session_state.exam_paper = exam_response.text
+                st.session_state.mid_exam_paper = exam_response.text
 
-            st.write(st.session_state.exam_paper)
+                st.success("Mid Semester Paper Generated Successfully!")
+
+                st.write(st.session_state.mid_exam_paper)
 
         except Exception as e:
             st.error(f"Error: {e}")
 
-    if "exam_paper" in st.session_state:
-        pdf_file = create_pdf(st.session_state.exam_paper)
-        st.download_button(
-            label="Download Exam Paper",
-            data=pdf_file,
-            file_name="Exam_Paper.pdf",
-            mime="application/pdf"
-        )  
 
-            
+    if st.session_state.mid_exam_paper:
+
+        pdf_file = create_pdf(st.session_state.mid_exam_paper)
+
+        st.download_button(
+            label="Download Mid Sem PDF",
+            data=pdf_file,
+            file_name="Mid_Sem_Paper.pdf",
+            mime="application/pdf"
+        )
+
+    st.markdown("---")
+
+    if end_sem:
+
+        try:
+
+            with st.spinner("Generating End Semester Exam Paper..."):
+
+                exam_response = model.generate_content(
+                    f"""
+                    Generate a university-style examination paper.
+
+                    You are an expert diploma engineering paper setter.
+
+                    Analyze:
+                    1. Syllabus weightage
+                    2. Chapter wise Notes
+                    3. Important Questions
+                    4. Question Pattern
+
+                    Rules:
+                    - Total Marks: 100
+                    - Cover complete syllabus
+                    - Follow diploma engineering exam pattern
+                    - Follow OR structure
+                    - Include 5 marks and 10 marks questions
+                    - Follow chapter weightage
+                    - Cover all units
+                    - Focus on repeated questions
+                    - Create realistic examination paper
+
+                    Pattern:
+
+                    Q1.
+                    (a),(b) Attempt compulsory two (5 marks each)
+                    (c) Attempt compulsory one (10 marks)
+
+                    Q2.
+                    (a),(b) Attempt compulsory two (5 marks each)
+                    (c) Attempt Any One of Two (10 marks)
+
+                    Q3.
+                    (a),(b),(c) Attempt Any Three
+                    ((a),(b)=5 marks each and (c)=10 marks)
+
+                    Q4.
+                    (a),(b),(c) Attempt Any Three
+                    ((a),(b)=5 marks each and (c)=10 marks)
+
+                    Q5.
+                    (a),(b),(c) Attempt Any Three
+                    ((a),(b)=5 marks each and (c)=10 marks)
+
+                    Notes:
+                    {st.session_state.notes[:50000]}
+
+                    SYLLABUS:
+                    {syllabus_text[:10000]}
+                    """
+                )
+
+                st.session_state.final_exam_paper = exam_response.text
+
+                st.success("End Semester Paper Generated Successfully!")
+
+                st.write(st.session_state.final_exam_paper)
+
+        except Exception as e:
+            st.error(f"Error: {e}")
+
+    
+
+    if st.session_state.final_exam_paper:
+
+        pdf_file = create_pdf(st.session_state.final_exam_paper)
+
+        st.download_button(
+            label="Download Final Sem PDF",
+            data=pdf_file,
+            file_name="Final_Sem_Paper.pdf",
+            mime="application/pdf"
+        )

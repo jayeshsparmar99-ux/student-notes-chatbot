@@ -15,6 +15,7 @@ import numpy as np
 from PIL import Image
 from docx import Document
 
+from xml.sax.saxutils import escape
 
 load_dotenv()
 
@@ -32,7 +33,12 @@ def create_pdf(text):
     styles = getSampleStyleSheet()
     content = []
     for line in text.split("\n"):
-        content.append(Paragraph(line, styles["Normal"]))
+        try:
+            safe_line = escape(line)
+            content.append(Paragraph(safe_line, styles["Normal"]))
+        except:
+            pass
+        
     pdf.build(content)
     buffer.seek(0)
     return buffer

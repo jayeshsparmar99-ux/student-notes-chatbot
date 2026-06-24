@@ -264,7 +264,15 @@ with tab1:
         try:
             with st.spinner("Generating MCQs..."):
                 mcq_response = model.generate_content(
-                    f"Generate 20 MCQs with 4 options and correct answers from:\n\n{st.session_state.notes[:8000]}"
+                    f"""Generate 20 MCQs with 4 options and correct answers.  
+                       Do NOT use:
+                                 - **
+                                 - *
+                                 - #
+                                 - Markdown formatting
+                                Return plain text only.
+                                 
+                     from:\n\n{st.session_state.notes[:8000]}"""
                 )
                 st.session_state.mcq = mcq_response.text
                 st.write(st.session_state.mcq)
@@ -285,7 +293,15 @@ with tab2:
         try:
             with st.spinner("Generating Questions..."):
                 questions_response = model.generate_content(
-                f"Generate the 20 most important exam questions likely to appear in university/diplom exam from:\n\n{st.session_state.notes[:8000]}"
+                f"""Generate the 20 most important exam questions likely to appear in university/diplom exam.
+                  Do NOT use:
+                                 - **
+                                 - *
+                                 - #
+                                 - Markdown formatting
+                                Return plain text only.
+                                 
+                 from:\n\n{st.session_state.notes[:8000]}"""
                 )
 
                 st.session_state.questions = questions_response.text
@@ -379,6 +395,13 @@ with tab4:
                     (a),(b),(c) Attempt Any Three
                     ((a),(b) = 5 marks each and (c) = 10 marks)
 
+                     Do NOT use:
+                                 - **
+                                 - *
+                                 - #
+                                 - Markdown formatting
+                                Return plain text only.
+
                     Notes:
                     {st.session_state.notes[:50000]}
 
@@ -460,6 +483,13 @@ with tab4:
                     Q5.
                     (a),(b),(c) Attempt Any Three
                     ((a),(b)=5 marks each and (c)=10 marks)
+
+                     Do NOT use:
+                                 - **
+                                 - *
+                                 - #
+                                 - Markdown formatting
+                                Return plain text only.
 
                     Notes:
                     {st.session_state.notes[:50000]}

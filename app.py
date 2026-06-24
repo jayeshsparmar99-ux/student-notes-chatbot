@@ -381,32 +381,95 @@ with tab4:
                     - Focus on high-weightage chapters
                     - Create realistic examination paper
 
-                    Pattern:
+                    Generate a Diploma Engineering Mid Semester Examination Paper.
+                        Rules:
 
-                    Q1.
-                    (a),(b) Attempt compulsory two (5 marks each)
-                    (c) Attempt compulsory one (10 marks)
+                        * Total Marks = 60
+                        * Cover syllabus proportionally
+                        * Follow Diploma Engineering MSE pattern exactly
+                        * Generate realistic university-level questions
+                        * Include theory, definitions, comparisons, explanations, diagrams, applications, and problem-solving questions where appropriate
+                        * Questions should be clear and grammatically correct
+                        * Do not repeat questions
+                        * Cover multiple units
+                        * Give proper spacing between questions
 
-                    Q2.
-                    (a),(b) Attempt compulsory two (5 marks each)
-                    (c) Attempt Any One of Two (10 marks)
+                        Paper Format:
 
-                    Q3.
-                    (a),(b),(c) Attempt Any Three
-                    ((a),(b) = 5 marks each and (c) = 10 marks)
+                        Diploma Engineering – Mid Semester Examination
 
-                     Do NOT use:
-                                 - **
-                                 - *
-                                 - #
-                                 - Markdown formatting
-                                Return plain text only.
+                        Subject Name:
+                        Date:
+                        Semester:
+                        Time:
+                        Total Marks: 60
 
-                    Notes:
-                    {st.session_state.notes[:50000]}
+                        Instructions:
 
-                    SYLLABUS:
-                    {syllabus_text[:10000]}
+                        1. Question No. 1 is compulsory.
+                        2. Make suitable assumptions wherever necessary.
+                        3. Figures to the right indicate full marks.
+
+                        Q.1
+
+                        (a) Question (5 Marks)
+
+                        (b) Question (5 Marks)
+
+                        (c) Question (10 Marks)
+
+                        Q.2
+
+                        (a) Question (5 Marks)
+
+                        (b) Question (5 Marks)
+
+                        OR
+
+                        (b) Alternative Question (5 Marks)
+
+                        (c) Question (10 Marks)
+
+                        OR
+
+                        (c) Alternative Question (10 Marks)
+
+                        Q.3
+
+                        (a) Question (5 Marks)
+
+                        (b) Question (5 Marks)
+
+                        (c) Question (10 Marks)
+
+                        OR
+
+                        (a) Alternative Question (5 Marks)
+
+                        (b) Alternative Question (5 Marks)
+
+                        (c) Alternative Question (10 Marks)
+
+                        Return ONLY the examination paper.
+
+                        Do NOT use:
+                        **
+                        *
+
+                        #
+
+                        ---
+
+                        Markdown formatting
+
+                        Return plain text only.
+
+                        NOTES:
+                        {st.session_state.notes[:50000]}
+
+                        SYLLABUS:
+                        {syllabus_text[:10000]}
+
                     """
                 )
 
@@ -446,56 +509,134 @@ with tab4:
                     You are an expert diploma engineering paper setter.
 
                     Analyze:
-                    1. Syllabus weightage
-                    2. Chapter wise Notes
+
+                    1. Uploaded Notes
+                    2. Uploaded Syllabus
                     3. Important Questions
-                    4. Question Pattern
+                    4. Unit Weightage
+                    5. Previous Examination Pattern
 
                     Rules:
-                    - Total Marks: 100
-                    - Cover complete syllabus
-                    - Follow diploma engineering exam pattern
-                    - Follow OR structure
-                    - Include 5 marks and 10 marks questions
-                    - Follow chapter weightage
-                    - Cover all units
-                    - Focus on repeated questions
-                    - Create realistic examination paper
 
-                    Pattern:
+                    * Total Marks = 100
+                    * Cover complete syllabus
+                    * Follow Diploma Engineering ESE pattern exactly
+                    * Generate realistic university-level questions
+                    * Include theory, definitions, comparisons, explanations, diagrams, applications, and problem-solving questions where appropriate
+                    * Questions should be clear and grammatically correct
+                    * Do not repeat questions
+                    * Follow syllabus weightage
+                    * Cover all units
+                    * Give proper spacing between questions
 
-                    Q1.
-                    (a),(b) Attempt compulsory two (5 marks each)
-                    (c) Attempt compulsory one (10 marks)
+                    Paper Format:
 
-                    Q2.
-                    (a),(b) Attempt compulsory two (5 marks each)
-                    (c) Attempt Any One of Two (10 marks)
+                    Diploma Engineering – End Semester Examination
 
-                    Q3.
-                    (a),(b),(c) Attempt Any Three
-                    ((a),(b)=5 marks each and (c)=10 marks)
+                    Subject Name:
+                    Date:
+                    Semester:
+                    Time:
+                    Total Marks: 100
 
-                    Q4.
-                    (a),(b),(c) Attempt Any Three
-                    ((a),(b)=5 marks each and (c)=10 marks)
+                    Instructions:
 
-                    Q5.
-                    (a),(b),(c) Attempt Any Three
-                    ((a),(b)=5 marks each and (c)=10 marks)
+                    1. Question No. 1 is compulsory.
+                    2. Make suitable assumptions wherever necessary.
+                    3. Figures to the right indicate full marks.
 
-                     Do NOT use:
-                                 - **
-                                 - *
-                                 - #
-                                 - Markdown formatting
-                                Return plain text only.
+                    Q.1
 
-                    Notes:
+                    (a) Question (5 Marks)
+
+                    (b) Question (5 Marks)
+
+                    (c) Question (10 Marks)
+
+                    Q.2
+
+                    (a) Question (5 Marks)
+
+                    (b) Question (5 Marks)
+
+                    OR
+
+                    (b) Alternative Question (5 Marks)
+
+                    (c) Question (10 Marks)
+
+                    OR
+
+                    (c) Alternative Question (10 Marks)
+
+                    Q.3
+
+                    (a) Question (5 Marks)
+
+                    (b) Question (5 Marks)
+
+                    (c) Question (10 Marks)
+
+                    OR
+
+                    (a) Alternative Question (5 Marks)
+
+                    (b) Alternative Question (5 Marks)
+
+                    (c) Alternative Question (10 Marks)
+
+                    Q.4
+
+                    (a) Question (5 Marks)
+
+                    (b) Question (5 Marks)
+
+                    (c) Question (10 Marks)
+
+                    OR
+
+                    (a) Alternative Question (5 Marks)
+
+                    (b) Alternative Question (5 Marks)
+
+                    (c) Alternative Question (10 Marks)
+
+                    Q.5
+
+                    (a) Question (5 Marks)
+
+                    (b) Question (5 Marks)
+
+                    (c) Question (10 Marks)
+
+                    OR
+
+                    (a) Alternative Question (5 Marks)
+
+                    (b) Alternative Question (5 Marks)
+
+                    (c) Alternative Question (10 Marks)
+
+                    Return ONLY the examination paper.
+
+                    Do NOT use:
+                    **
+                    *
+
+                    #
+
+                    ---
+
+                    Markdown formatting
+
+                    Return plain text only.
+
+                    NOTES:
                     {st.session_state.notes[:50000]}
 
                     SYLLABUS:
                     {syllabus_text[:10000]}
+
                     """
                 )
 

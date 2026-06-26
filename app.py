@@ -3,6 +3,7 @@ from reportlab.lib import styles
 import streamlit as st
 import fitz 
 import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 import os
 
@@ -25,7 +26,34 @@ genai.configure(
 
 model = genai.GenerativeModel("gemini-2.5-flash")
 
+groq_client = Groq(
+    api_key=os.getenv("GROQ_API_KEY")
+)
 
+def ask_ai(prompt):
+
+    # Try Gemini first
+    try:
+        response = model.generate_content(prompt)
+        return response.text
+
+    except Exception as e:
+
+        print("Gemini Error:", e)
+
+        # If Gemini fails, use Groq
+        response = groq_client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.3,
+        )
+
+        return response.choices[0].message.content
 
 def create_pdf(text):
     buffer = io.BytesIO()
@@ -217,29 +245,23 @@ if submit and question:
 
     try:
         with st.spinner("Thinking...."):
-            response = model.generate_content(prompt)
 
-            answer = response.text
+            answer = ask_ai(prompt)
 
             st.session_state.chat_history.append({
-              "question": question , "answer": answer
-              })  
-            
-            
+                "question": question,
+                "answer": answer
+            })
 
-        st.session_state.chat_history = st.session_state.chat_history[-10:]           
+        st.session_state.chat_history = st.session_state.chat_history[-10:]
 
         st.subheader("Answer")
-        st.write(response.text)
-
-      
+        st.write(answer)
 
         st.success("Answer generated successfully!")
 
     except Exception as e:
-        st.error(f"Error:{e}")
-
-
+        st.error(f"Error: {e}")
 
 st.markdown("---")
 st.subheader("Chat History")

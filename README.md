@@ -147,6 +147,6 @@ Diploma in Information Technology
 
 Gyanmanjari Diploma Engineering College.Bhavnagar
 
-Internship Project – 2026
+
 
 GitHub: https://github.com/jayeshparmar99-ux

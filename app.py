@@ -68,7 +68,7 @@ def ask_ai(prompt):
             print("Groq Failed:", groq_error)
 
             return f"""
-❌ Both AI providers are unavailable.
+ Both AI providers are unavailable.
 
 Gemini Error:
 {gemini_error}

@@ -34,26 +34,48 @@ def ask_ai(prompt):
 
     # Try Gemini first
     try:
+        print("Using Gemini...")
+
         response = model.generate_content(prompt)
+
         return response.text
 
-    except Exception as e:
+    except Exception as gemini_error:
 
-        print("Gemini Error:", e)
+        print("Gemini Failed:", gemini_error)
+        print("Switching to Groq...")
 
-        # If Gemini fails, use Groq
-        response = groq_client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=0.3,
-        )
+        # Try Groq
+        try:
 
-        return response.choices[0].message.content
+            response = groq_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0.3,
+            )
+
+            print("Using Groq...")
+
+            return response.choices[0].message.content
+
+        except Exception as groq_error:
+
+            print("Groq Failed:", groq_error)
+
+            return f"""
+❌ Both AI providers are unavailable.
+
+Gemini Error:
+{gemini_error}
+
+Groq Error:
+{groq_error}
+"""
 
 def create_pdf(text):
     buffer = io.BytesIO()
@@ -285,7 +307,7 @@ with tab1:
     if st.button("Generate MCQs"):
         try:
             with st.spinner("Generating MCQs..."):
-                mcq_response = model.generate_content(
+                st.session_state.mcq = ask_ai(
                     f"""Generate 20 MCQs with 4 options and correct answers.  
                        Do NOT use:
                                  - **
@@ -296,7 +318,7 @@ with tab1:
                                  
                      from:\n\n{st.session_state.notes[:8000]}"""
                 )
-                st.session_state.mcq = mcq_response.text
+              
                 st.write(st.session_state.mcq)
         except Exception as e:
              st.error(f"Error:{e}")
@@ -314,7 +336,7 @@ with tab2:
     if st.button("Important Questions"):
         try:
             with st.spinner("Generating Questions..."):
-                questions_response = model.generate_content(
+                st.session_state.questions = ask_ai(
                 f"""Generate the 20 most important exam questions likely to appear in university/diplom exam.
                   Do NOT use:
                                  - **
@@ -326,7 +348,7 @@ with tab2:
                  from:\n\n{st.session_state.notes[:8000]}"""
                 )
 
-                st.session_state.questions = questions_response.text
+                
 
             st.write(st.session_state.questions)
             
@@ -347,11 +369,11 @@ with tab3:
         try:
             with st.spinner("Generating Summary..."):
 
-                summary_response = model.generate_content(
+              st.session_state.summary = ask_ai(
                     f"Summarize these notes:\n\n{st.session_state.notes[:8000]}"
                 )
 
-                st.session_state.summary = summary_response.text
+               
 
             st.write(st.session_state.summary)
 
@@ -381,7 +403,7 @@ with tab4:
 
             with st.spinner("Generating Mid Semester Exam Paper..."):
 
-                exam_response = model.generate_content(
+                st.session_state.mid_exam_paper = ask_ai(
                     f"""
                     Generate a university-style examination paper.
 
@@ -495,7 +517,7 @@ with tab4:
                     """
                 )
 
-                st.session_state.mid_exam_paper = exam_response.text
+                
 
                 st.success("Mid Semester Paper Generated Successfully!")
 
@@ -524,7 +546,7 @@ with tab4:
 
             with st.spinner("Generating End Semester Exam Paper..."):
 
-                exam_response = model.generate_content(
+               st.session_state.final_exam_paper = ask_ai(
                     f"""
                     Generate a university-style examination paper.
 
@@ -662,11 +684,11 @@ with tab4:
                     """
                 )
 
-                st.session_state.final_exam_paper = exam_response.text
+                
 
-                st.success("End Semester Paper Generated Successfully!")
+            st.success("End Semester Paper Generated Successfully!")
 
-                st.write(st.session_state.final_exam_paper)
+            st.write(st.session_state.final_exam_paper)
 
         except Exception as e:
             st.error(f"Error: {e}")

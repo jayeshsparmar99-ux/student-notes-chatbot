@@ -209,8 +209,8 @@ if syllabus_file:
 
     for page in doc:
         syllabus_text += page.get_text() + "\n"
-        
-       
+
+notes_uploaded = len(uploaded_files) > 0 if uploaded_files else False
 
 
 
@@ -238,17 +238,45 @@ with st.sidebar:
         "PDFs Uploaded",pdf_count
     )
 
-col1, col2 = st.columns([5,1])
+if notes_uploaded:
 
-with col1:
+    col1, col2 = st.columns([5,1])
+
+    with col1:
         question = st.text_input(
-        "Ask a question",
-        label_visibility="collapsed",
-        placeholder="Ask a question from your notes..."
-    )
+            "Ask a question",
+            label_visibility="collapsed",
+            placeholder="Ask a question from your notes..."
+        )
 
-with col2:
-    submit = st.button("➤")  
+    with col2:
+        submit = st.button("➤")
+
+    # KEEP your complete chatbot code here
+    # KEEP Chat History here
+    # KEEP Study Tools here
+    # KEEP Exam Paper Generator here
+
+else:
+
+    st.info("""
+ Upload your study notes to unlock all AI features.
+
+After uploading notes, you can use:
+
+ AI Chatbot
+
+ Generate Summary
+
+ Generate MCQs
+
+Generate Important Questions
+
+ Generate Mid Semester Paper
+
+ Generate End Semester Paper
+""")
+ 
 
 if submit and question:
 
@@ -380,9 +408,7 @@ with tab3:
         except Exception as e:
              st.error(f"Error:{e}")
 
-if not st.session_state.get("notes"):
-    st.warning("please upload PDF notes first.")
-    st.stop()  
+  
 
 with tab4:
 

@@ -197,7 +197,7 @@ for pdf_name in st.session_state.pdf_texts:
     )
 
 st.session_state.notes = combined_text[:50000]   
-
+  
 
 syllabus_text = ""
 if syllabus_file:
@@ -511,6 +511,9 @@ with tab4:
                         NOTES:
                         {st.session_state.notes[:50000]}
 
+                        # Check whether notes are uploaded
+                        notes_uploaded = bool(st.session_state.notes.strip())
+
                         SYLLABUS:
                         {syllabus_text[:10000]}
 
@@ -677,6 +680,9 @@ with tab4:
 
                     NOTES:
                     {st.session_state.notes[:50000]}
+
+                    # Check whether notes are uploaded
+                    notes_uploaded = bool(st.session_state.notes.strip())
 
                     SYLLABUS:
                     {syllabus_text[:10000]}

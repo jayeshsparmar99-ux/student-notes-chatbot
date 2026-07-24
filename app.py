@@ -147,7 +147,7 @@ if uploaded_files:
 
    st.session_state.pdf_texts = {}
 
-for uploaded_file in uploaded_files:
+   for uploaded_file in uploaded_files:
 
     file_type = uploaded_file.name.split(".")[-1].lower()
 
@@ -267,11 +267,12 @@ if notes_uploaded:
  col1, col2 = st.columns([5,1])
 
  with col1:
-        question = st.text_input(
-        "Ask a question",
-        label_visibility="collapsed",
-        placeholder="Ask a question from your notes..."
-    )
+       question = st.text_input(
+    "Ask a question",
+    key="question_input",
+    label_visibility="collapsed",
+    placeholder="Ask a question from your notes..."
+     )
 
  with col2:
     submit = st.button("➤")  
@@ -301,6 +302,9 @@ if notes_uploaded:
                 "answer": answer
             })
 
+        st.session_state.question_input = ""
+        st.rerun()
+        
         st.session_state.chat_history = st.session_state.chat_history[-10:]
 
         st.subheader("Answer")
@@ -763,23 +767,5 @@ with tab4:
         except Exception as e:
             st.error(f"Error: {e}")
 
-    
-
-    if st.session_state.final_exam_paper:
-
-        pdf_file = create_pdf(st.session_state.final_exam_paper)
-
-        st.download_button(
-            label="Download Final Sem PDF",
-            data=pdf_file,
-            file_name="Final_Sem_Paper.pdf",
-            mime="application/pdf"
-        )
-
-    else:
-
-        st.info("""
- Upload your study notes to unlock all AI features.
 
 
-""")

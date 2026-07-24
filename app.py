@@ -1,4 +1,6 @@
 
+from ast import If
+
 from reportlab.lib import styles
 import streamlit as st
 import fitz 
@@ -152,16 +154,31 @@ for uploaded_file in uploaded_files:
     extracted_text = ""
 
     # PDF
+    
     if file_type == "pdf":
 
-        doc = fitz.open(
-            stream=uploaded_file.read(),
-            filetype="pdf"
-        )
+        try:
 
-        for page in doc:
-            extracted_text += page.get_text() + "\n"
+            doc = fitz.open(
+                stream=uploaded_file.read(),
+                filetype="pdf"
+            )
 
+            if doc.needs_pass:
+                st.error(
+                    f"'{uploaded_file.name}' is password protected.\n"
+                    "Please remove the password and upload again."
+                )
+                continue
+
+            for page in doc:
+                extracted_text += page.get_text() + "\n"
+
+        except Exception:
+            st.error(
+                f"Unable to read '{uploaded_file.name}'. It may be corrupted."
+            )
+            continue
     # IMAGE
     elif file_type in ["png", "jpg", "jpeg"]:
 
@@ -196,7 +213,15 @@ for pdf_name in st.session_state.pdf_texts:
         + "\n\n"
     )
 
-st.session_state.notes = combined_text[:50000]   
+st.session_state.notes = combined_text[:50000] 
+notes_uploaded = bool(st.session_state.notes.strip())  
+if not notes_uploaded:
+    st.info("""
+ Upload your study notes first.
+
+
+""")
+    st.stop()
   
 
 syllabus_text = ""
@@ -209,8 +234,8 @@ if syllabus_file:
 
     for page in doc:
         syllabus_text += page.get_text() + "\n"
-
-notes_uploaded = len(uploaded_files) > 0 if uploaded_files else False
+        
+       
 
 
 
@@ -239,46 +264,19 @@ with st.sidebar:
     )
 
 if notes_uploaded:
+ col1, col2 = st.columns([5,1])
 
-    col1, col2 = st.columns([5,1])
-
-    with col1:
+ with col1:
         question = st.text_input(
-            "Ask a question",
-            label_visibility="collapsed",
-            placeholder="Ask a question from your notes..."
-        )
+        "Ask a question",
+        label_visibility="collapsed",
+        placeholder="Ask a question from your notes..."
+    )
 
-    with col2:
-        submit = st.button("➤")
+ with col2:
+    submit = st.button("➤")  
 
-    # KEEP your complete chatbot code here
-    # KEEP Chat History here
-    # KEEP Study Tools here
-    # KEEP Exam Paper Generator here
-
-else:
-
-    st.info("""
- Upload your study notes to unlock all AI features.
-
-After uploading notes, you can use:
-
- AI Chatbot
-
- Generate Summary
-
- Generate MCQs
-
-Generate Important Questions
-
- Generate Mid Semester Paper
-
- Generate End Semester Paper
-""")
- 
-
-if submit and question:
+ if submit and question:
 
     prompt = f"""
     you are a helpful study assistant.
@@ -336,7 +334,18 @@ with tab1:
         try:
             with st.spinner("Generating MCQs..."):
                 st.session_state.mcq = ask_ai(
-                    f"""Generate 20 MCQs with 4 options and correct answers.  
+                    f"""
+                     If the notes below are empty, reply ONLY:
+                    
+                     Please upload study notes first.
+                    
+                     Do not use your own knowledge.
+                     Do not guess.
+                     Do not generate any answer.
+                    
+                    
+
+                    Generate 20 MCQs with 4 options and correct answers.  
                        Do NOT use:
                                  - **
                                  - *
@@ -364,16 +373,29 @@ with tab2:
     if st.button("Important Questions"):
         try:
             with st.spinner("Generating Questions..."):
-                st.session_state.questions = ask_ai(
-                f"""Generate the 20 most important exam questions likely to appear in university/diplom exam.
-                  Do NOT use:
-                                 - **
-                                 - *
-                                 - #
-                                 - Markdown formatting
-                                Return plain text only.
-                                 
-                 from:\n\n{st.session_state.notes[:8000]}"""
+              st.session_state.questions = ask_ai(
+                    f"""
+                If the notes below are empty, reply ONLY:
+
+                Please upload study notes first.
+
+                Do not use your own knowledge.
+                Do not guess.
+                Do not generate any answer.
+
+                Generate the 20 most important exam questions likely to appear in university/diploma exam.
+
+                Do NOT use:
+                - **
+                - *
+                - #
+                - Markdown formatting
+
+                Return plain text only.
+
+                Notes:
+                {st.session_state.notes[:8000]}
+                """
                 )
 
                 
@@ -396,19 +418,27 @@ with tab3:
     if st.button("Summary"):
         try:
             with st.spinner("Generating Summary..."):
+                st.session_state.summary = ask_ai(
+                    f"""
+                If the notes below are empty, reply ONLY:
 
-              st.session_state.summary = ask_ai(
-                    f"Summarize these notes:\n\n{st.session_state.notes[:8000]}"
+                Please upload study notes first.
+
+                Do not use your own knowledge.
+                Do not guess.
+                Do not generate any answer.
+
+                Summarize these notes:
+
+                {st.session_state.notes[:8000]}
+                """
                 )
-
-               
 
             st.write(st.session_state.summary)
 
         except Exception as e:
-             st.error(f"Error:{e}")
+            st.error(f"Error:{e}")
 
-  
 
 with tab4:
 
@@ -431,6 +461,15 @@ with tab4:
 
                 st.session_state.mid_exam_paper = ask_ai(
                     f"""
+
+                    If the notes below are empty, reply ONLY:
+                                        
+                        Please upload study notes first.
+                                        
+                         Do not use your own knowledge.
+                         Do not guess.
+                         Do not generate any answer.
+                                     
                     Generate a university-style examination paper.
 
                     You are an expert diploma engineering paper setter.
@@ -537,9 +576,6 @@ with tab4:
                         NOTES:
                         {st.session_state.notes[:50000]}
 
-                        # Check whether notes are uploaded
-                        notes_uploaded = bool(st.session_state.notes.strip())
-
                         SYLLABUS:
                         {syllabus_text[:10000]}
 
@@ -577,7 +613,12 @@ with tab4:
 
                st.session_state.final_exam_paper = ask_ai(
                     f"""
-                    Generate a university-style examination paper.
+                    If the notes below are empty, reply ONLY:
+                    Please upload study notes first.
+                        Do not use your own knowledge.
+                        Do not guess.
+                        Do not generate any answer.
+
 
                     You are an expert diploma engineering paper setter.
 
@@ -707,9 +748,6 @@ with tab4:
                     NOTES:
                     {st.session_state.notes[:50000]}
 
-                    # Check whether notes are uploaded
-                    notes_uploaded = bool(st.session_state.notes.strip())
-
                     SYLLABUS:
                     {syllabus_text[:10000]}
 
@@ -737,3 +775,11 @@ with tab4:
             file_name="Final_Sem_Paper.pdf",
             mime="application/pdf"
         )
+
+    else:
+
+        st.info("""
+ Upload your study notes to unlock all AI features.
+
+
+""")

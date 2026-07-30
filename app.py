@@ -304,12 +304,29 @@ Question:
 
         try:
             with st.spinner("Thinking..."):
+                
 
-                if not st.session_state.notes.strip():
-                 st.warning("⚠ Please upload your notes first.")
-                st.stop()
+                answer = ask_ai(
+                    prompt = f"""
+                            You are a study assistant.
 
-                answer = ask_ai(prompt)
+                            Answer ONLY from the notes provided below.
+
+                            If the answer is NOT present in the notes, reply exactly:
+
+                            "Sorry, please check the uploaded notes for this information. "
+
+
+                            Do NOT use your own knowledge.
+                            Do NOT guess.
+
+                            Notes:
+                            {st.session_state.notes[:50000]}
+
+                            Question:
+                            {question}
+                            """
+                )
 
                 st.session_state.chat_history.append({
                     "question": question,

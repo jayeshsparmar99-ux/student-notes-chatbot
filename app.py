@@ -308,15 +308,12 @@ Question:
                 st.session_state.chat_history = st.session_state.chat_history[-10:]
 
             st.success("Answer generated successfully!")
-            # st.rerun()
-  
-            #if "last_answer" in st.session_state:
+            
+            if "last_answer" in st.session_state:
 
-            #  st.subheader("")
-
-            #  st.markdown(f"**Question:** {st.session_state.last_question}")
-
-            # st.write(st.session_state.last_answer)
+              st.subheader("")
+ 
+              st.write(st.session_state.last_answer)
 
         except Exception as e:
             st.error(f"Error: {e}")

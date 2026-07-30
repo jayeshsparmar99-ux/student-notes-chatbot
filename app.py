@@ -264,57 +264,63 @@ with st.sidebar:
     )
 
 if notes_uploaded:
- col1, col2 = st.columns([5,1])
 
- with col1:
-    question = st.text_input(
-    "Ask a question",
-    value=st.session_state.get("question", ""),
-    key="question_box",
-    label_visibility="collapsed",
-    placeholder="Ask a question from your notes..."
-    )
+    with st.form("chat_form", clear_on_submit=True):
 
- with col2:
-    submit = st.button("➤")  
+        col1, col2 = st.columns([12,1], vertical_alignment="bottom")
 
- if submit and question:
+        with col1:
+            question = st.text_input(
+                "",
+                placeholder="Ask a question from your notes..."
+            )
 
-    prompt = f"""
-    you are a helpful study assistant.
+        with col2:
+            submit = st.form_submit_button("➤")
 
-    use the notes below to answer.
+    if submit and question:
 
-    
-    Notes:
-    {st.session_state.notes[:50000]}
+        prompt = f"""
+You are a helpful study assistant.
 
-    Question:
-    {question}
-    """
+Use the notes below to answer.
 
-    try:
-        with st.spinner("Thinking...."):
+Notes:
+{st.session_state.notes[:50000]}
 
-            answer = ask_ai(prompt)
+Question:
+{question}
+"""
 
-            st.session_state.chat_history.append({
-                "question": question,
-                "answer": answer
-            })
+        try:
+            with st.spinner("Thinking..."):
 
-        st.session_state.question_input = ""
-        st.rerun()
+                answer = ask_ai(prompt)
 
-        st.session_state.chat_history = st.session_state.chat_history[-10:]
+                st.session_state.chat_history.append({
+                    "question": question,
+                    "answer": answer
+                })
 
-        st.subheader("Answer")
-        st.write(answer)
+                st.session_state.last_question = question
+                st.session_state.last_answer = answer
 
-        st.success("Answer generated successfully!")
+                st.session_state.chat_history = st.session_state.chat_history[-10:]
 
-    except Exception as e:
-        st.error(f"Error: {e}")
+            st.success("Answer generated successfully!")
+            # st.rerun()
+  
+            #if "last_answer" in st.session_state:
+
+            #  st.subheader("")
+
+            #  st.markdown(f"**Question:** {st.session_state.last_question}")
+
+            # st.write(st.session_state.last_answer)
+
+        except Exception as e:
+            st.error(f"Error: {e}")
+
 
 st.markdown("---")
 st.subheader("Chat History")

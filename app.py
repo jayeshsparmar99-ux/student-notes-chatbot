@@ -305,6 +305,10 @@ Question:
         try:
             with st.spinner("Thinking..."):
 
+                if not st.session_state.notes.strip():
+                 st.warning("⚠ Please upload your notes first.")
+                st.stop()
+
                 answer = ask_ai(prompt)
 
                 st.session_state.chat_history.append({

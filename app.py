@@ -267,12 +267,13 @@ if notes_uploaded:
  col1, col2 = st.columns([5,1])
 
  with col1:
-       question = st.text_input(
+    question = st.text_input(
     "Ask a question",
-    key="question_input",
+    value=st.session_state.get("question", ""),
+    key="question_box",
     label_visibility="collapsed",
     placeholder="Ask a question from your notes..."
-     )
+    )
 
  with col2:
     submit = st.button("➤")  
@@ -304,7 +305,7 @@ if notes_uploaded:
 
         st.session_state.question_input = ""
         st.rerun()
-        
+
         st.session_state.chat_history = st.session_state.chat_history[-10:]
 
         st.subheader("Answer")

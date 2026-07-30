@@ -308,7 +308,8 @@ Question:
                 st.session_state.chat_history = st.session_state.chat_history[-10:]
 
             st.success("Answer generated successfully!")
-            
+            # st.rerun()
+  
             if "last_answer" in st.session_state:
 
               st.subheader("")

@@ -1,18 +1,9 @@
 
 from ast import If
 
+from reportlab.lib import styles
 import streamlit as st
-# PyMuPDF exposes the module as "fitz". Some environments/package managers
-# may install it under a different name; attempt to import common variants
-try:
-    import fitz
-except ImportError:
-    try:
-        # some distributions use the package name 'pymupdf'
-        import pymupdf as fitz
-    except ImportError:
-        # keep original import error for clarity elsewhere
-        raise
+import fitz 
 import google.generativeai as genai
 from groq import Groq
 from dotenv import load_dotenv
